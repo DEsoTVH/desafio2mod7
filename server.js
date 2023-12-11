@@ -14,20 +14,12 @@ app.post("/canciones", async (req, res) => {
   try {
     const repertorio = await getRepertorio();
 
-    if (
-      !req.body.titulo.trim() ||
-      !req.body.artista.trim() ||
-      !req.body.tono.trim()
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Los datos de la canción no pueden estar vacíos" });
+    if (!req.body.titulo.trim() || !req.body.artista.trim() || !req.body.tono.trim()) {
+      return res.status(400).json({ error: "Los datos de la canción no pueden estar vacíos" });
     }
 
     if (repertorio.some((c) => c.id === req.body.id)) {
-      return res
-        .status(400)
-        .json({ error: "El ID de la canción ya existe, elige otro ID" });
+      return res.status(400).json({ error: "El ID de la canción ya existe, elige otro ID" });
     }
 
     const nuevaCancion = req.body;
@@ -62,9 +54,7 @@ app.put("/canciones/:id", async (req, res) => {
     const index = repertorio.findIndex((c) => c.id === id);
 
     if (!req.body.titulo || !req.body.artista || !req.body.tono) {
-      return res
-        .status(400)
-        .json({ error: "Los datos de la canción son incompletos" });
+      return res.status(400).json({ error: "Los datos de la canción son incompletos" });
     }
 
     if (index === -1) {
@@ -72,9 +62,7 @@ app.put("/canciones/:id", async (req, res) => {
     }
 
     if (repertorio.some((c, i) => i !== index && c.id === req.body.id)) {
-      return res
-        .status(400)
-        .json({ error: "El ID de la canción ya existe, elige otro ID" });
+      return res.status(400).json({ error: "El ID de la canción ya existe, elige otro ID" });
     }
 
     repertorio[index] = { id, ...req.body };
@@ -110,9 +98,9 @@ app.delete("/canciones/:id", async (req, res) => {
     if (index !== -1) {
       repertorio.splice(index, 1);
       await saveRepertorio(repertorio);
-      res.json({ message: "Canción eliminada correctamente" });
+      res.json({ message: "Canción eliminada exitosamente" });
     } else {
-      res.status(404).json({ error: "Canción no encontrada" });
+      res.status(404).json({ error: "No se encuentra la cancion" });
     }
   } catch (error) {
     console.error(error);
